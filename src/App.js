@@ -1,4 +1,5 @@
 import "./styles.css";
+import { useState } from "react";
 
 export default function App() {
   return (
@@ -34,6 +35,48 @@ export default function App() {
   );
 }
 
-function TextExpander() {
-  return <div>TODO</div>;
+function TextExpander({
+  children,
+  collapsedNumWords = 9,
+  expanded = false,
+  collapseButtonText = "Show less",
+  expandButtonText = "Show more",
+  className = undefined,
+  buttonColor = "blue",
+}) {
+  const [isExpanded, setIsExpanded] = useState(expanded);
+  function handleExpand() {
+    setIsExpanded(!isExpanded);
+  }
+
+  const buttonStyle = {
+    background: "none",
+    border: "none",
+    font: "inherit",
+    color: buttonColor,
+  };
+  
+  return (
+    <div className={className}>
+      {isExpanded ? (
+        children
+      ) : (
+        <TextMapper text={children} numWords={collapsedNumWords} />
+      )}
+
+      <button style={buttonStyle} onClick={handleExpand}>
+        {isExpanded ? collapseButtonText : expandButtonText}
+      </button>
+    </div>
+  );
+}
+
+function TextMapper({ text, numWords }) {
+  const splitText = text.split(" ");
+  return (
+    <>
+      {splitText.map((sText, index) => index <= numWords && ` ${sText}`)}
+      ...
+    </>
+  );
 }
